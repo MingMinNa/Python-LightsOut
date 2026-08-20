@@ -11,6 +11,9 @@ class Generator:
     __board : Board
 
     def __init__(self, length: int, random_seed: int | None = None) -> None:
+
+        check_length(length)
+
         self.__length = length
         self.reset_seed(random_seed)
         self.regenerate()

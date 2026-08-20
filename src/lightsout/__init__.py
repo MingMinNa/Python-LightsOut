@@ -1,3 +1,4 @@
+from importlib.metadata import PackageNotFoundError, version
 from .consts    import ON, OFF
 from .board     import Position, Board
 from .exception import InvalidGrid, UnsolvablePuzzle
@@ -11,3 +12,8 @@ __all__ = [
     "Generator",
     "Solver"
 ]
+
+try:
+    __version__ = version("python-lightsout")
+except PackageNotFoundError:
+    __version__ = "0.0.0"

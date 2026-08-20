@@ -9,6 +9,12 @@ class Solver:
 
     def __init__(self, board: Board):
 
+        if not isinstance(board, Board):
+            raise TypeError(
+                f"the board must be an instance of {Board.__name__}, "
+                f"got {type(board).__name__}"
+            )
+
         self.__board  = board.copy()
         self.__length = self.__board.get_length()
         self.__grid   = self.__board.get_grid()

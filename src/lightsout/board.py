@@ -21,23 +21,12 @@ class Board:
 
     def __init__(self, length: int, grid: Grid | None = None) -> None:
 
-        if type(length) is not int:
-            raise TypeError(
-                f"the data type of length must be integer, "
-                f"got {type(length).__name__}"
-            )
-
-        if length <= 0: 
-            raise ValueError(
-                f"the length must be positive, "
-                f"got {length}"
-            )
+        check_length(length)
 
         if grid is None:
             grid = [OFF] * length * length
 
-        if not valid_grid(length, grid):
-            raise InvalidGrid
+        check_grid(length, grid)
 
         self.__length = length
         self.__grid   = deepcopy(grid)
@@ -85,7 +74,10 @@ class Board:
     def from_2d_grid(cls, grid_2d: Sequence[Sequence[bool]]) -> Board:
  
         if not isinstance(grid_2d, Sequence):
-            raise InvalidGrid
+            raise InvalidGrid(
+                f"the data type of grid_2d must be list or tuple, "
+                f"got {type(grid_2d).__name__}"
+            )
  
         length = len(grid_2d)
         grid: Grid = []
@@ -93,7 +85,10 @@ class Board:
         for row in grid_2d:
 
             if not isinstance(row, Sequence) or len(row) != length:
-                raise InvalidGrid
+                raise InvalidGrid(
+                    f"the data type or the size of row doesn't match, "
+                    f"got {type(row).__name__}, {row}"
+                )
  
             grid.extend(row)
  
@@ -114,13 +109,21 @@ class Board:
         return True 
 
     def press(self, row: int, col: int) -> None:
+
+        if type(row) is not int or type(col) is not int:
+            raise TypeError(
+                f"the data type of row and col must be integer, "
+                f"got {type(row).__name__} and {type(col).__name__}."
+            )
     
         length = self.__length
-        size   = length * length
         base   = calc_index(length, row, col)
 
-        if base >= size:
-            raise IndexError
+        if row < 0 or row >= length or col < 0 or col >= length:
+            raise IndexError(
+                f"the value range of row and col must be in [{0}, {length - 1}], "
+                f"got {row} and {col}."
+            )
 
         self.__grid[base] = bool(not self.__grid[base])
 
@@ -143,16 +146,39 @@ class Board:
 def calc_index(length: int, row: int, col: int) -> int:
     return row * length + col
 
-def valid_grid(length: int, grid: Grid) -> bool:
+def check_length(length: int) -> None:
+    
+    if type(length) is not int:
+        raise TypeError(
+            f"the data type of length must be integer, "
+            f"got {type(length).__name__}."
+        )
+
+    if length <= 0: 
+        raise ValueError(
+            f"the length must be positive, "
+            f"got {length}."
+        )
+
+def check_grid(length: int, grid: Grid) -> None:
 
     if type(grid) is not list:
-        return False
+        raise InvalidGrid(
+            f"the data type of grid must be {Grid}, "
+            f"got {type(grid).__name__}."
+        )
 
     if len(grid) != length * length:
-        return False
+        raise InvalidGrid(
+            f"the size of grid doesn't match, "
+            f"{len(grid)} != {length * length}"
+        )
 
     for cell in grid:
         if type(cell) is not bool:
-            return False
+            raise InvalidGrid(
+                f"there are cells containing invalid value, "
+                f"got {cell}."
+            )
     
     return True

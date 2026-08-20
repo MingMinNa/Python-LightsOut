@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=83.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name    = "python-lightsout"
+version = "1.0.0"
+requires-python = ">=3.13"
+description = "A Python package for Lights Out."
+readme = "README.md"
+license = { text = "MIT" }
+keywords = ["lightsout"]
+
+[project.urls]
+Repository = "https://github.com/MingMinNa/Python-LightsOut"
+
+[project.optional-dependencies]
+test = ["pytest>=9.1.1"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
