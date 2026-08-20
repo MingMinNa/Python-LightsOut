@@ -1,16 +1,20 @@
 from importlib.metadata import PackageNotFoundError, version
-from .consts    import ON, OFF
-from .board     import Position, Board
+
+from .board import Board, Position
+from .consts import OFF, ON
 from .exception import InvalidGrid, UnsolvablePuzzle
 from .generator import Generator
-from .solver    import Solver
+from .solver import Solver
 
 __all__ = [
-    "ON", "OFF",
-    "Position", "Board",
-    "InvalidGrid", "UnsolvablePuzzle", 
+    "OFF",
+    "ON",
+    "Board",
     "Generator",
-    "Solver"
+    "InvalidGrid",
+    "Position",
+    "Solver",
+    "UnsolvablePuzzle"
 ]
 
 try:

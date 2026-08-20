@@ -1,7 +1,10 @@
 from __future__ import annotations
-from copy       import deepcopy
-from typing     import NamedTuple, Sequence
-from .consts    import *
+
+from collections.abc import Sequence
+from copy import deepcopy
+from typing import NamedTuple
+
+from .consts import *
 from .exception import *
 
 Grid = list[bool]

@@ -1,6 +1,7 @@
 import random
-from .consts    import *
-from .board     import *
+
+from .board import *
+from .consts import *
 from .exception import *
 
 

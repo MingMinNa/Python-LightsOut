@@ -1,6 +1,5 @@
-from copy       import deepcopy
-from .board     import Board, Position, calc_index
-from .consts    import *
+from .board import Board, Position, calc_index
+from .consts import *
 from .exception import *
 
 

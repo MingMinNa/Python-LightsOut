@@ -1,5 +1,6 @@
 import pytest
-from lightsout import Board, Solver, Position, UnsolvablePuzzle
+
+from lightsout import Board, Position, Solver, UnsolvablePuzzle
 
 
 def apply_solution(board: Board, solution: tuple[Position]) -> Board:

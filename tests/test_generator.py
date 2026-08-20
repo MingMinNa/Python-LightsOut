@@ -1,5 +1,6 @@
 import pytest
-from lightsout import Generator, Solver, Board
+
+from lightsout import Board, Generator, Solver
 
 
 class TestBasics:

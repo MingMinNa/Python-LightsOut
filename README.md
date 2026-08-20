@@ -32,14 +32,14 @@ This package can be installed in two ways:
 
 ### Install from the repository
 ```bash
-git clone https://github.com/MingMinNa/Python-LightsOut.git
-cd Python-LightsOut
-pip install .
+$ git clone https://github.com/MingMinNa/Python-LightsOut.git
+$ cd Python-LightsOut
+$ pip install .
 ```
 
 ### Install via PyPI
 ```bash
-pip install python-lightsout
+$ pip install python-lightsout
 ```
 
 Then, run the following code to verify the installation:

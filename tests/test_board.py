@@ -1,5 +1,6 @@
 import pytest
-from lightsout import Board, Position, InvalidGrid
+
+from lightsout import Board, InvalidGrid, Position
 
 
 class TestConstruction:
