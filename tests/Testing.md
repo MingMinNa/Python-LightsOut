@@ -20,8 +20,8 @@ $ pip install python-lightsout[test]
 
 ## Run tests
 ```bash
-# Run all tests
-$ pytest tests/
+# Run all tests with code coverage
+$ pytest tests/ --cov --cov-report=term-missing
 
 # Run tests in a specific file
 $ pytest tests/test_board.py
@@ -39,11 +39,26 @@ $ pytest tests/test_board.py::TestConstruction::test_default_grid_is_all_off
 platform win32 -- Python 3.13.15, pytest-9.1.1, pluggy-1.6.0
 rootdir: ...\Python-LightsOut
 configfile: pyproject.toml
+testpaths: tests
+plugins: cov-7.1.0
 collected 95 items
 
 tests\test_board.py ..................................................   [ 52%]
 tests\test_generator.py .....................                            [ 74%]
 tests\test_solver.py ........................                            [100%]
 
-============================= 95 passed in 0.28s ==============================
+=============================== tests coverage ================================
+______________ coverage: platform win32, python 3.13.15-final-0 _______________
+
+Name                         Stmts   Miss  Cover   Missing
+----------------------------------------------------------
+src\lightsout\__init__.py       11      2    82%   22-23
+src\lightsout\board.py          92      0   100%
+src\lightsout\consts.py         12      0   100%
+src\lightsout\exception.py       2      0   100%
+src\lightsout\generator.py      30      0   100%
+src\lightsout\solver.py         71      0   100%
+----------------------------------------------------------
+TOTAL                          218      2    99%
+============================= 95 passed in 0.63s ==============================
 ```
