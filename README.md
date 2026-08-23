@@ -62,7 +62,7 @@ from lightsout.board import Board, ON, OFF
 board = Board(5, 5)
 print(board, "\n")
 
-# You can also provide a 1D grid (size must be length * length)
+# You can also provide a 1D grid (size must be height * width)
 board = Board(3, 3, [
     OFF, ON , OFF,
     ON , OFF, ON ,
@@ -204,7 +204,7 @@ Press (1, 0)
 ### Notes
 - If the puzzle is unsolvable, calling `solve()` directly will raise an `UnsolvablePuzzle` exception.
 - It is recommended to call `is_solvable()` first or use `try/except`.
-- If the board size exceeds 4300, a `ValueError` may occur due to Python's integer string conversion limit. 
+- If the board size exceeds about 14280, a `ValueError` may occur due to Python's integer string conversion limit. 
 
 ## References & Tools
 - [Wikipedia – Lights Out (game)](https://en.wikipedia.org/wiki/Lights_Out_(game))
