@@ -59,11 +59,11 @@ Here are some simple usage examples.
 from lightsout.board import Board, ON, OFF
 
 # Method 1: Create an empty 5x5 board with all lights off
-board = Board(5)
+board = Board(5, 5)
 print(board, "\n")
 
 # You can also provide a 1D grid (size must be length * length)
-board = Board(3, [
+board = Board(3, 3, [
     OFF, ON , OFF,
     ON , OFF, ON ,
     OFF, ON , OFF,
@@ -118,9 +118,9 @@ print(board, "\n")
 ```python
 from lightsout.generator import Generator
 
-# Create a 5x5 generator.
+# Create a 5x3 generator.
 # random_seed can be omitted if not needed.
-generator = Generator(length=5, random_seed=42)
+generator = Generator(5, 3, random_seed=42)
 
 # Get the current puzzle.
 # A copy is returned, so the internal state will not be affected.
@@ -137,19 +137,19 @@ print(puzzle)
 <summary>Output</summary>
 
 ```text
-   0 1 2 3 4
-0  . . . . O
-1  O . . O .
-2  . . . O O
-3  . O . O O
-4  O O . O . 
+   0 1 2
+0  . . .
+1  O . .
+2  . O O
+3  . O .
+4  . . O 
 
-   0 1 2 3 4
-0  . . O O O
-1  O . O . .
-2  O . O . .
-3  . . . . .
-4  O . O . .
+   0 1 2
+0  . O O
+1  O O O
+2  O O O
+3  O . O
+4  . . O
 ```
 </details>
 
@@ -158,7 +158,7 @@ print(puzzle)
 ```python
 from lightsout import Board, Generator, Solver
 
-puzzle = Generator(length=3).get_puzzle()
+puzzle = Generator(3, 3).get_puzzle()
 solver = Solver(puzzle)
 print(puzzle, "\n")
 
@@ -180,19 +180,19 @@ else:
 
 ```text
    0 1 2
-0  . O .
-1  O . O
-2  O . O 
+0  . O O
+1  O . .
+2  O . . 
 
 Press the following positions in order:
 
-Press (1, 1)
+Press (0, 1)
    0 1 2
-0  . . .
-1  . O .
-2  O O O 
+0  O . .
+1  O O .
+2  O . . 
 
-Press (2, 1)
+Press (1, 0)
    0 1 2
 0  . . .
 1  . . .
@@ -204,6 +204,7 @@ Press (2, 1)
 ### Notes
 - If the puzzle is unsolvable, calling `solve()` directly will raise an `UnsolvablePuzzle` exception.
 - It is recommended to call `is_solvable()` first or use `try/except`.
+- If the board size exceeds 4300, a `ValueError` may occur due to Python's integer string conversion limit. 
 
 ## References & Tools
 - [Wikipedia – Lights Out (game)](https://en.wikipedia.org/wiki/Lights_Out_(game))

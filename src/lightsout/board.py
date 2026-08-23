@@ -9,61 +9,65 @@ from .exception import *
 
 Grid = list[bool]
 
-
 class Position(NamedTuple):
-    row  : int
-    col  : int
+    row : int
+    col : int
 
 
 class Board:
 
-    __length: int
-    __grid  : Grid
+    __height : int
+    __width  : int
+    __grid   : Grid
 
     # Magic methods
 
-    def __init__(self, length: int, grid: Grid | None = None) -> None:
+    def __init__(self, height: int, width: int, grid: Grid | None = None) -> None:
 
-        check_length(length)
+        _check_length(height, "height")
+        _check_length(width, "width")
 
         if grid is None:
-            grid = [OFF] * length * length
+            grid = [OFF] * height * width
 
-        check_grid(length, grid)
+        _check_grid(height, width, grid)
 
-        self.__length = length
+        self.__height = height
+        self.__width  = width
         self.__grid   = deepcopy(grid)
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Board):
             return NotImplemented
         return (
-            self.__length == other.get_length() and 
+            self.__height == other.get_height() and 
+            self.__width  == other.get_width() and 
             self.__grid   == other.get_grid()
         )
 
     def __repr__(self) -> str:
-        return f"Board(length={self.__length}, grid={self.__grid})"
+        return f"Board(height={self.__height}, width={self.__width}, grid={self.__grid})"
 
     def __str__(self) -> str:
     
-        length = self.__length
+        height = self.__height
+        width  = self.__width
         grid   = self.__grid
  
-        col_width = len(str(length - 1)) + 1
-        row_label_width = len(str(length - 1))
+        col_width = len(str(width - 1)) + 1
+        row_label_width = len(str(height - 1))
 
         header = " " * (row_label_width + 1) + "".join(
-            f"{c:>{col_width}}" for c in range(length)
+            f"{c:>{col_width}}" for c in range(width)
         )
  
         lines = [header]
  
-        for r in range(length):
+        for r in range(height):
             row_cells = []
 
-            for c in range(length):
-                index = calc_index(length, r, c)
+            for c in range(width):
+                index = calc_index(width, r, c)
                 cell_char = ON_CHAR if grid[index] is ON else OFF_CHAR
                 row_cells.append(f"{cell_char:>{col_width}}")
 
@@ -76,34 +80,39 @@ class Board:
     @classmethod
     def from_2d_grid(cls, grid_2d: Sequence[Sequence[bool]]) -> Board:
  
-        if not isinstance(grid_2d, Sequence):
+        if type(grid_2d) not in (list, tuple):
             raise InvalidGrid(
                 f"the data type of grid_2d must be list or tuple, "
                 f"got {type(grid_2d).__name__}"
             )
- 
-        length = len(grid_2d)
+
+        width  = -1
+        height = len(grid_2d)
         grid: Grid = []
  
         for row in grid_2d:
 
-            if not isinstance(row, Sequence) or len(row) != length:
+            if type(row) not in (list, tuple) or (width >= 0 and len(row) != width):
                 raise InvalidGrid(
                     f"the data type or the size of row doesn't match, "
                     f"got {type(row).__name__}, {row}"
                 )
- 
+            
+            width = len(row)
             grid.extend(row)
  
-        return cls(length, grid)
+        return cls(height, width, grid)
 
     # Getters
 
     def get_grid(self) -> Grid:
         return self.__grid
 
-    def get_length(self) -> int:
-        return self.__length
+    def get_height(self) -> int:
+        return self.__height
+
+    def get_width(self) -> int:
+        return self.__width
 
     def is_all_off(self) -> bool:
         for cell in self.__grid:
@@ -118,14 +127,21 @@ class Board:
                 f"the data type of row and col must be integer, "
                 f"got {type(row).__name__} and {type(col).__name__}."
             )
-    
-        length = self.__length
-        base   = calc_index(length, row, col)
 
-        if row < 0 or row >= length or col < 0 or col >= length:
+        height = self.__height
+        width  = self.__width
+        base   = calc_index(width, row, col)
+
+        if row < 0 or row >= height:
             raise IndexError(
-                f"the value range of row and col must be in [{0}, {length - 1}], "
-                f"got {row} and {col}."
+                f"the value range of row must be in [{0}, {height - 1}], "
+                f"got {row}."
+            )
+
+        if col < 0 or col >= width:
+            raise IndexError(
+                f"the value range of column must be in [{0}, {width - 1}], "
+                f"got {col}."
             )
 
         self.__grid[base] = bool(not self.__grid[base])
@@ -133,37 +149,38 @@ class Board:
         for dir in Direction.get_dirs():
             r, c = row + dir[0], col + dir[1]
 
-            if 0 <= r < length and 0 <= c < length:
-                index = calc_index(length, r, c)
+            if 0 <= r < height and 0 <= c < width:
+                index = calc_index(width, r, c)
                 self.__grid[index] = bool(not self.__grid[index])
 
     def copy(self) -> Board:
         return Board(
-            self.__length, 
+            self.__height,
+            self.__width, 
             self.__grid
         )
 
 
 # Helper functions
 
-def calc_index(length: int, row: int, col: int) -> int:
-    return row * length + col
+def calc_index(width: int, row: int, col: int) -> int:
+    return row * width + col
 
-def check_length(length: int) -> None:
+def _check_length(length: int, var_name: str) -> None:
     
     if type(length) is not int:
         raise TypeError(
-            f"the data type of length must be integer, "
+            f"the data type of {var_name} must be integer, "
             f"got {type(length).__name__}."
         )
 
     if length <= 0: 
         raise ValueError(
-            f"the length must be positive, "
+            f"{var_name} must be positive, "
             f"got {length}."
         )
 
-def check_grid(length: int, grid: Grid) -> None:
+def _check_grid(height: int, width: int, grid: Grid) -> None:
 
     if type(grid) is not list:
         raise InvalidGrid(
@@ -171,10 +188,10 @@ def check_grid(length: int, grid: Grid) -> None:
             f"got {type(grid).__name__}."
         )
 
-    if len(grid) != length * length:
+    if len(grid) != height * width:
         raise InvalidGrid(
             f"the size of grid doesn't match, "
-            f"{len(grid)} != {length * length}"
+            f"{len(grid)} != {height * width}"
         )
 
     for cell in grid:
@@ -183,5 +200,3 @@ def check_grid(length: int, grid: Grid) -> None:
                 f"there are cells containing invalid value, "
                 f"got {cell}."
             )
-    
-    return True

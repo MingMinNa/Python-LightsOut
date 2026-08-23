@@ -15,7 +15,8 @@ class Solver:
             )
 
         self.__board  = board.copy()
-        self.__length = self.__board.get_length()
+        self.__height = self.__board.get_height()
+        self.__width  = self.__board.get_width()
         self.__grid   = self.__board.get_grid()
 
     def solve(self) -> tuple[Position]:
@@ -26,8 +27,10 @@ class Solver:
         if not self.__is_consistent(reduced):
             raise UnsolvablePuzzle
 
-        length = self.__length
-        size   = length * length
+        height = self.__height
+        width  = self.__width
+
+        size = height * width
         solution = [False] * size
 
         for row in reduced:
@@ -38,7 +41,7 @@ class Solver:
             solution[pivot_col] = bool((row >> size) & 1)
 
         pressed = tuple(
-            Position(i // length, i % length)
+            Position(i // width, i % width)
             for i in range(size) if solution[i]
         )
         return pressed
@@ -51,21 +54,23 @@ class Solver:
     # Augmented matrix 
     def __build_matrix(self) -> list[int]:
 
-        length = self.__length
-        size   = length * length
+        height = self.__height
+        width  = self.__width
+
+        size = height * width
         matrix: list[int] = [0] * size
 
-        for row in range(length):
-            for col in range(length):
+        for row in range(height):
+            for col in range(width):
 
-                index = calc_index(length, row, col)
+                index = calc_index(width, row, col)
                 mask  = 1 << index
                 
                 for dir in Direction.get_dirs():
                     r, c = row + dir[0], col + dir[1]
 
-                    if 0 <= r < length and 0 <= c < length:
-                        mask |= 1 << calc_index(length, r, c)
+                    if 0 <= r < height and 0 <= c < width:
+                        mask |= 1 << calc_index(width, r, c)
 
                 matrix[index] = mask
 
@@ -110,6 +115,8 @@ class Solver:
         for row in reduced:
             coeffs = row & ((1 << size) - 1)
             augmented = (row >> size) & 1
+            
             if coeffs == 0 and augmented == 1:
                 return False
+
         return True

@@ -1,6 +1,7 @@
 import random
 
 from .board import *
+from .board import _check_length
 from .consts import *
 from .exception import *
 
@@ -8,14 +9,18 @@ from .exception import *
 # Lights Out Generator
 class Generator:
 
-    __length: int   # the side length of grid
-    __board : Board
+    __height : int
+    __width  : int   
+    __board  : Board
 
-    def __init__(self, length: int, random_seed: int | None = None) -> None:
+    def __init__(self, height: int, width: int, random_seed: int | None = None) -> None:
 
-        check_length(length)
+        _check_length(height, "height")
+        _check_length(width, "width")
 
-        self.__length = length
+        self.__height = height
+        self.__width  = width
+        
         self.reset_seed(random_seed)
         self.regenerate()
 
@@ -24,18 +29,20 @@ class Generator:
 
     def regenerate(self) -> None:
 
-        length = self.__length
-        size   = length * length
-        done   = False
+        height = self.__height
+        width  = self.__width
+
+        size = height * width
+        done = False
 
         while not done:
 
-            board = Board(length)
+            board = Board(height, width)
             times = self.__rng.randint(1, size)
 
             for _ in range(times):
-                r = self.__rng.randint(0, length - 1)
-                c = self.__rng.randint(0, length - 1)
+                r = self.__rng.randint(0, height - 1)
+                c = self.__rng.randint(0, width - 1)
                 board.press(r, c)
 
             # avoid turning off all the lights.

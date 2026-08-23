@@ -41,11 +41,12 @@ rootdir: ...\Python-LightsOut
 configfile: pyproject.toml
 testpaths: tests
 plugins: cov-7.1.0
-collected 95 items
+collected 146 items
 
-tests\test_board.py ..................................................   [ 52%]
-tests\test_generator.py .....................                            [ 74%]
-tests\test_solver.py ........................                            [100%]
+tests\test_board.py .................................................... [ 35%]
+.......................                                                  [ 51%]
+tests\test_generator.py ......................................           [ 77%]
+tests\test_solver.py .................................                   [100%]
 
 =============================== tests coverage ================================
 ______________ coverage: platform win32, python 3.13.15-final-0 _______________
@@ -53,12 +54,12 @@ ______________ coverage: platform win32, python 3.13.15-final-0 _______________
 Name                         Stmts   Miss  Cover   Missing
 ----------------------------------------------------------
 src\lightsout\__init__.py       11      2    82%   22-23
-src\lightsout\board.py          92      0   100%
+src\lightsout\board.py         102      0   100%
 src\lightsout\consts.py         12      0   100%
 src\lightsout\exception.py       2      0   100%
-src\lightsout\generator.py      30      0   100%
-src\lightsout\solver.py         71      0   100%
+src\lightsout\generator.py      35      0   100%
+src\lightsout\solver.py         74      0   100%
 ----------------------------------------------------------
-TOTAL                          218      2    99%
-============================= 95 passed in 0.63s ==============================
+TOTAL                          236      2    99%
+============================= 146 passed in 0.81s =============================
 ```

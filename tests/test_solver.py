@@ -12,8 +12,12 @@ def apply_solution(board: Board, solution: tuple[Position]) -> Board:
 
 class TestConstruction:
 
-    def test_accepts_board_instance(self):
-        Solver(Board(3))  # should not raise
+    @pytest.mark.parametrize("height,width", [
+        (3, 3),  # square
+        (2, 5),  # rectangle
+    ])
+    def test_accepts_board_instance(self, height, width):
+        Solver(Board(height, width))  # should not raise
 
     @pytest.mark.parametrize("bad_board", ["not a board", 123, None, [1, 2], 3.0])
     def test_non_board_input_raises_type_error(self, bad_board):
@@ -24,12 +28,12 @@ class TestConstruction:
 class TestBasics:
 
     def test_all_off_board_has_empty_solution(self):
-        board = Board(3)
+        board = Board(3, 3)
         solver = Solver(board)
         assert solver.solve() == ()
 
     def test_solver_does_not_mutate_input_board(self):
-        board = Board(3)
+        board = Board(3, 3)
         board.press(1, 1)
         original = board.get_grid().copy()
 
@@ -39,7 +43,7 @@ class TestBasics:
         assert board.get_grid() == original
 
     def test_single_press_is_self_solvable(self):
-        board = Board(3)
+        board = Board(3, 3)
         board.press(1, 1)
 
         solver = Solver(board)
@@ -50,7 +54,7 @@ class TestBasics:
         assert solved_board.is_all_off()
 
     def test_solution_entries_are_positions(self):
-        board = Board(2)
+        board = Board(2, 2)
         board.press(0, 0)
         solver = Solver(board)
         solution = solver.solve()
@@ -60,17 +64,20 @@ class TestBasics:
 class TestIsSolvable:
 
     def test_all_off_board_is_solvable(self):
-        assert Solver(Board(4)).is_solvable()
+        assert Solver(Board(4, 4)).is_solvable()
 
-    @pytest.mark.parametrize("length", [2, 3, 4, 5, 6])
-    def test_boards_reachable_by_pressing_buttons_are_solvable(self, length):
-        board = Board(length)
+    @pytest.mark.parametrize("height,width", [
+        (2, 2), (3, 3), (4, 4), (5, 5), (6, 6),  # square
+        (2, 3), (3, 2), (2, 5), (4, 7),          # rectangle
+    ])
+    def test_boards_reachable_by_pressing_buttons_are_solvable(self, height, width):
+        board = Board(height, width)
         board.press(0, 0)
-        board.press(length - 1, length - 1)
+        board.press(height - 1, width - 1)
         assert Solver(board).is_solvable()
 
     def test_is_solvable_does_not_mutate_board(self):
-        board = Board(3)
+        board = Board(3, 3)
         board.press(0, 1)
         original = board.get_grid().copy()
         Solver(board).is_solvable()
@@ -79,12 +86,15 @@ class TestIsSolvable:
 
 class TestRoundTrip:
 
-    @pytest.mark.parametrize("length", [2, 3, 4, 5])
-    def test_solve_then_apply_clears_board(self, length):
+    @pytest.mark.parametrize("height,width", [
+        (2, 2), (3, 3), (4, 4), (5, 5),   # square
+        (2, 3), (3, 2), (2, 5), (4, 7),   # rectangular
+    ])
+    def test_solve_then_apply_clears_board(self, height, width):
         # build a scrambled but definitely-solvable board by pressing buttons
-        board = Board(length)
-        for r in range(length):
-            for c in range(length):
+        board = Board(height, width)
+        for r in range(height):
+            for c in range(width):
                 if (r + c) % 2 == 0:
                     board.press(r, c)
 
@@ -101,7 +111,7 @@ class TestUnsolvableRaisesException:
         size = length * length
         grid = [False] * size
         grid[0] = True
-        return Board(length, grid)
+        return Board(length, length, grid)
 
     def test_solve_raises_unsolvable_puzzle(self):
         board = self._unsolvable_board()
