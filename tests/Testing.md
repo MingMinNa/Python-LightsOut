@@ -4,18 +4,18 @@ This package uses the pytest framework.
 
 ## Installation
 
-The installation steps are similar to those described in [`README.md`](../README.md), but the `[test]` extra is required to install pytest as well.
+The installation steps are similar to those described in [`README.md`](../README.md), but the `[dev]` extra is required to install pytest as well.
 
 ### Install from the repository
 ```bash
 $ git clone https://github.com/MingMinNa/Python-LightsOut.git
 $ cd Python-LightsOut
-$ pip install .[test]
+$ pip install .[dev]
 ```
 
 ### Install via PyPI
 ```bash
-$ pip install python-lightsout[test]
+$ pip install python-lightsout[dev]
 ```
 
 ## Run tests
