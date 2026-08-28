@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name    = "python-lightsout"
-version = "2.0.0"
+version = "2.0.1"
 requires-python = ">=3.13"
 description = "A Python package for Lights Out."
 readme = "README.md"
@@ -19,7 +19,9 @@ Repository = "https://github.com/MingMinNa/Python-LightsOut"
 dev = [
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
-    "ruff>=0.16.3"
+    "ruff>=0.16.3",
+    "build>=1.6.0", 
+    "twine>=7.0.0"
 ]
 
 [tool.setuptools.packages.find]
